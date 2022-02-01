@@ -23,7 +23,7 @@ class Othello {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0],
     ];
-    this.order = 0;
+    this.order = 1;
     this.history = [];
     this.canvas.addEventListener('click', (e) => {
       this.mouseX = Math.floor(e.offsetX / this.pixcel);
@@ -62,6 +62,36 @@ class Othello {
   }
   putOn(x, y) {
     //置けるか判定する
+    let canPut = (() => {
+      //上下右左
+      let coo = [
+        [-1, 0],
+        [1, 0],
+        [0, 1],
+        [0, -1],
+      ];
+      let directions = [false, false, false, false];
+      directions = directions
+        .map((_, i) => {
+          let co = coo[i];
+          let other = (() => {
+            if (this.order === 1) {
+              return 2;
+            }
+            if (this.order === 2) {
+              return 1;
+            }
+          })();
+          if (this.board[y + co[0]][x + co[1]] === other) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .map((value, index) => {
+          if (!value) return false;
+        });
+    })();
     this.history.push([x, y]);
     return this;
   }
