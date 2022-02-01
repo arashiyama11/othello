@@ -64,48 +64,46 @@ class Othello {
     }
     return this;
   }
+  canPutAt(x, y) {
+    //上下左右
+    let coo = [
+      [0, 1],
+      [0, -1],
+      [-1, 0],
+      [1, 0],
+    ];
+    let other;
+    if (this.order === 1) {
+      other = 2;
+    } else if (this.order === 2) {
+      other = 1;
+    }
+    let directions = [false, false, false, false];
+    directions = directions.map((_, i) => {
+      let co = coo[i];
+
+      if (this.at(x + co[0], y + co[1]) === other) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    directions = directions.map((value, index) => {
+      if (!value) return false;
+      let i = 1;
+      while (true) {
+        let co = coo[index];
+        let it = this.at(x + co[0] * i, y + co[1] * i);
+        if (it === undefined) return false;
+        if (it === this.order) return true;
+        i++;
+      }
+    });
+    return directions;
+  }
   putOn(x, y) {
-    //置けるか判定する
-    let canPut = (() => {
-      //上下左右
-      let coo = [
-        [0, 1],
-        [0, -1],
-        [-1, 0],
-        [1, 0],
-      ];
-      let directions = [false, false, false, false];
-      directions = directions.map((_, i) => {
-        let co = coo[i];
-        let other = (() => {
-          if (this.order === 1) {
-            return 2;
-          }
-          if (this.order === 2) {
-            return 1;
-          }
-        })();
-        if (this.at(x + co[0], y + co[1]) === other) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      
-      directions = directions.map((value, index) => {
-        if (!value) return false;
-        let i = 1;
-        while (true) {
-          let co = coo[index];
-          let it = this.at(x + co[0] * i, y + co[1] * i);
-          if (it === undefined) return false;
-          if (it === this.order) return true;
-          i++;
-        }
-      });
-      return directions;
-    })();
-    if(canPut.includes(true))this.history.push([x, y]);
+    let canPut = this.canPutAt(x, y);
+    if (canPut.includes(true)) this.history.push([x, y]);
     return this;
   }
   readHistry() {
@@ -128,4 +126,4 @@ class Othello {
   }
 }
 
-let othello = new Othello(canvas).drowGrid().drow().putOn(3,5);
+let othello = new Othello(canvas).drowGrid().drow().putOn(3, 5);
