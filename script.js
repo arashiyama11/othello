@@ -64,11 +64,12 @@ class Othello {
     }
     return this;
   }
+
   canPutAt(x, y) {
     //上下左右
     let coo = [
-      [0, 1],
       [0, -1],
+      [0, 1],
       [-1, 0],
       [1, 0],
     ];
@@ -81,7 +82,6 @@ class Othello {
     let directions = [false, false, false, false];
     directions = directions.map((_, i) => {
       let co = coo[i];
-
       if (this.at(x + co[0], y + co[1]) === other) {
         return true;
       } else {
@@ -103,6 +103,7 @@ class Othello {
   }
   putOn(x, y) {
     let canPut = this.canPutAt(x, y);
+    console.log(canPut);
     if (canPut.includes(true)) this.history.push([x, y]);
     return this;
   }
@@ -126,4 +127,4 @@ class Othello {
   }
 }
 
-let othello = new Othello(canvas).drowGrid().drow().putOn(3, 5);
+let othello = new Othello(canvas).drowGrid().drow().putOn(4, 2);
