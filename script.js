@@ -4,8 +4,6 @@ let canvas = document.getElementById('can');
 let ctx = canvas.getContext('2d');
 canvas.height = size;
 canvas.width = size;
-ctx.fillStyle = 'grey';
-ctx.fillRect(0, 0, 600, 600);
 class Othello {
   constructor(canvasElement) {
     this.canvas = canvasElement;
@@ -32,17 +30,38 @@ class Othello {
       if (0 <= this.mouseX <= 8 && 0 <= this.mouseY <= 8) {
         this.putOn(this.mouseX, this.mouseY);
         console.log(this.history);
-        this.order = (() => {
-          if (this.order === 1) {
-            return 2;
-          }
-          if (this.order === 2) {
-            return 1;
-          }
-        })();
         this.readHistry();
       }
     };
+  }
+  get winner() {
+    return new Promise((resolve, reject) => {
+      setInterval(() => {
+        if (this.win == 'decide') {
+          let white = 0;
+          let black = 0;
+          let result = this.board
+            .reduce((a, b) => [...a, ...b])
+            .forEach((v) => {
+              if (v === 1) {
+                black++;
+              }
+              if (v === 2) {
+                white++;
+              }
+            });
+          if (white < black) {
+            resolve('black');
+          }
+          if (black < white) {
+            resolve('white');
+          }
+          if (black === white) {
+            resolve('draw');
+          }
+        }
+      }, 1000);
+    });
   }
   enableClickToPut() {
     this.canvas.addEventListener('click', this.clickEvent);
@@ -172,29 +191,35 @@ class Othello {
       for (let k = 0; k < vs.length; k++) {
         let co = coo[k];
         for (let l = 0; l <= vs[k][1]; l++) {
-          //console.log(this.history[i][0]+co[0]*l,this.history[i][1]+co[1]*l)
-          /*
-          console.log(co)
-          console.log(
-            this.history[i][0] + co[0] * l,
-            this.history[i][1] + co[1] * l,
-            (i % 2) + 1
-          );*/
-
           this.setAt(
             this.history[i][0] + co[0] * l,
             this.history[i][1] + co[1] * l,
             (i % 2) + 1
           );
         }
-
         this.ctx.fillStyle = this.backgroundColor;
         this.ctx.fillRect(0, 0, this.size, this.size);
         this.drow();
       }
+      if (
+        !this.board
+          .map((value, i) =>
+            value
+              .map((_, j) =>
+                [...this.canPutAt(i, j, 1), ...this.canPutAt(i, j, 2)].map(
+                  (v) => v[0]
+                )
+              )
+              .reduce((a, b) => [...a, ...b])
+          )
+          .reduce((a, b) => [...a, ...b])
+          .includes(true)
+      )
+        this.win = 'decide';
     }
     return this;
   }
+
   drowGrid() {
     this.ctx.fillStyle = this.backgroundColor;
     this.ctx.fillRect(0, 0, this.size, this.size);
@@ -214,10 +239,15 @@ class Othello {
   }
 }
 
-let othello = new Othello(canvas).drowGrid().drow().enableClickToPut();
+let othello = new Othello(canvas).drow().enableClickToPut();
 /*othello.history = [
   [4, 2],
   [5, 2],
   [3, 5],
 ];*/
 othello.readHistry();
+console.log(
+  othello.winner.then((d) => {
+    console.log(d);
+  })
+);
