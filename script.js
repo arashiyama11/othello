@@ -103,12 +103,12 @@ class Othello {
     });
     directions = directions.map((value, index) => {
       if (!value) return [false, 0];
-      let i = 1;
+      let i = 2;
       while (true) {
         let co = coo[index];
         let it = this.at(x + co[0] * i, y + co[1] * i);
-        if (it === undefined) return [false, 0];
-        if (it === this.order) return [true, i];
+        if (it === undefined || it === 0) return [false, 0];
+        if (it === color) return [true, i];
         i++;
       }
     });
@@ -141,8 +141,16 @@ class Othello {
         );
       for (let k = 0; k < vs.length; k++) {
         let co = coo[k];
-        for (let l = 0; l < vs[k][1]; l++) {
+        for (let l = 0; l <= vs[k][1]; l++) {
           //console.log(this.history[i][0]+co[0]*l,this.history[i][1]+co[1]*l)
+          /*
+          console.log(co)
+          console.log(
+            this.history[i][0] + co[0] * l,
+            this.history[i][1] + co[1] * l,
+            (i % 2) + 1
+          );*/
+
           this.setAt(
             this.history[i][0] + co[0] * l,
             this.history[i][1] + co[1] * l,
@@ -174,4 +182,9 @@ class Othello {
   }
 }
 
-let othello = new Othello(canvas).drowGrid().drow().putOn(4, 2).readHistry();
+let othello = new Othello(canvas)
+  .drowGrid()
+  .drow()
+  .putOn(4, 2)
+  .putOn(5, 2)
+  .readHistry();
