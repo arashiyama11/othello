@@ -24,6 +24,7 @@ class Othello {
       [0, 0, 0, 0, 0, 0, 0, 0],
     ];
     this.order = 1;
+    this.color = [null, 'black', 'white'];
     this.history = [];
     this.canvas.addEventListener('click', (e) => {
       this.mouseX = Math.floor(e.offsetX / this.pixcel);
@@ -34,7 +35,15 @@ class Othello {
     if (this.board[y] === undefined) return undefined;
     return this.board[y][x];
   }
+  setAt(x, y, value) {
+    if (this.board[y] !== undefined) {
+      if (this.board[y][x] !== undefined) {
+        this.board[y][x] = value;
+      }
+    }
+  }
   drow() {
+    this.drowGrid();
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         if (this.board[i][j] === 1) {
@@ -65,21 +74,25 @@ class Othello {
     return this;
   }
 
-  canPutAt(x, y) {
-    //上下左右
+  canPutAt(x, y, color) {
+    //上から時計回り
     let coo = [
       [0, -1],
-      [0, 1],
-      [-1, 0],
+      [1, -1],
       [1, 0],
+      [1, 1],
+      [0, 1],
+      [-1, 1],
+      [-1, 0],
+      [-1, -1],
     ];
     let other;
-    if (this.order === 1) {
+    if (color === 1) {
       other = 2;
-    } else if (this.order === 2) {
+    } else if (color === 2) {
       other = 1;
     }
-    let directions = [false, false, false, false];
+    let directions = Array(8).fill(false);
     directions = directions.map((_, i) => {
       let co = coo[i];
       if (this.at(x + co[0], y + co[1]) === other) {
@@ -89,26 +102,60 @@ class Othello {
       }
     });
     directions = directions.map((value, index) => {
-      if (!value) return false;
+      if (!value) return [false, 0];
       let i = 1;
       while (true) {
         let co = coo[index];
         let it = this.at(x + co[0] * i, y + co[1] * i);
-        if (it === undefined) return false;
-        if (it === this.order) return true;
+        if (it === undefined) return [false, 0];
+        if (it === this.order) return [true, i];
         i++;
       }
     });
     return directions;
   }
   putOn(x, y) {
-    let canPut = this.canPutAt(x, y);
-    console.log(canPut);
-    if (canPut.includes(true)) this.history.push([x, y]);
+    this.history.push([x, y]);
     return this;
   }
   readHistry() {
     //historyから最新の盤面を計算する
+    let coo = [
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+      [-1, 1],
+      [-1, 0],
+      [-1, -1],
+    ];
+    for (let i = 0; i < this.history.length; i++) {
+      let vs = this.canPutAt(...this.history[i], (i % 2) + 1);
+      console.log(vs);
+      if (!vs.map((v) => v[0]).includes(true))
+        throw new Error(
+          `cannnot put ${this.color[(i % 2) + 1]} on (${this.history[i][0]},${
+            this.history[i][1]
+          })`
+        );
+      for (let k = 0; k < vs.length; k++) {
+        let co = coo[k];
+        for (let l = 0; l < vs[k][1]; l++) {
+          //console.log(this.history[i][0]+co[0]*l,this.history[i][1]+co[1]*l)
+          this.setAt(
+            this.history[i][0] + co[0] * l,
+            this.history[i][1] + co[1] * l,
+            (i % 2) + 1
+          );
+        }
+
+        this.ctx.fillStyle = this.backgroundColor;
+        this.ctx.fillRect(0, 0, this.size, this.size);
+        this.drow();
+      }
+    }
+    return this;
   }
   drowGrid() {
     this.ctx.beginPath();
@@ -127,4 +174,4 @@ class Othello {
   }
 }
 
-let othello = new Othello(canvas).drowGrid().drow().putOn(4, 2);
+let othello = new Othello(canvas).drowGrid().drow().putOn(4, 2).readHistry();
