@@ -26,10 +26,30 @@ class Othello {
     this.order = 1;
     this.color = [null, 'black', 'white'];
     this.history = [];
-    this.canvas.addEventListener('click', (e) => {
+    this.clickEvent = (e) => {
       this.mouseX = Math.floor(e.offsetX / this.pixcel);
       this.mouseY = Math.floor(e.offsetY / this.pixcel);
-    });
+      if (0 <= this.mouseX <= 8 && 0 <= this.mouseY <= 8) {
+        this.putOn(this.mouseX, this.mouseY);
+        console.log(this.history);
+        this.order = (() => {
+          if (this.order === 1) {
+            return 2;
+          }
+          if (this.order === 2) {
+            return 1;
+          }
+        })();
+        this.readHistry();
+      }
+    };
+  }
+  enableClickToPut() {
+    this.canvas.addEventListener('click', this.clickEvent);
+    return this;
+  }
+  disableClickToPut() {
+    this.canvas.removeEventListener('click', this.clickEvent);
   }
   at(x, y) {
     if (this.board[y] === undefined) return undefined;
@@ -120,6 +140,16 @@ class Othello {
   }
   readHistry() {
     //historyから最新の盤面を計算する
+    this.board = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 2, 0, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+    ];
     let coo = [
       [0, -1],
       [1, -1],
@@ -166,6 +196,8 @@ class Othello {
     return this;
   }
   drowGrid() {
+    this.ctx.fillStyle = this.backgroundColor;
+    this.ctx.fillRect(0, 0, this.size, this.size);
     this.ctx.beginPath();
     this.ctx.strokeStyle = 'black';
     for (let i = 0; i < 8; i++) {
@@ -182,9 +214,10 @@ class Othello {
   }
 }
 
-let othello = new Othello(canvas)
-  .drowGrid()
-  .drow()
-  .putOn(4, 2)
-  .putOn(5, 2)
-  .readHistry();
+let othello = new Othello(canvas).drowGrid().drow().enableClickToPut();
+/*othello.history = [
+  [4, 2],
+  [5, 2],
+  [3, 5],
+];*/
+othello.readHistry();
