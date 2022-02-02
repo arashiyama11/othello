@@ -328,5 +328,5 @@ let othello = new Othello(canvas).drow().enableClickToPut();
 othello.readHistry();
 othello.winner.then((d) => {
   console.log(`${d} win`);
-  document.querySelector("input").value=`${d} win`
+  document.querySelector('input').value = `${d} win`;
 });
