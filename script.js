@@ -185,7 +185,6 @@ class Othello {
     ];
     for (let i = 0; i < this.history.length; i++) {
       let vs = this.canPutAt(...this.history[i], (i % 2) + 1);
-      //console.log(vs);
       if (!vs.map((v) => v[0]).includes(true)) {
         /*throw new Error(
           `cannnot put ${this.color[(i % 2) + 1]} on (${this.history[i][0]},${
