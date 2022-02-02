@@ -115,6 +115,10 @@ class Othello {
 
   canPutAt(x, y, color) {
     //上から時計回り
+    if (this.at(x, y) !== 0)
+      return Array(8)
+        .fill(0)
+        .map(() => [false, 0]);
     let coo = [
       [0, -1],
       [1, -1],
@@ -181,13 +185,21 @@ class Othello {
     ];
     for (let i = 0; i < this.history.length; i++) {
       let vs = this.canPutAt(...this.history[i], (i % 2) + 1);
-      console.log(vs);
-      if (!vs.map((v) => v[0]).includes(true))
-        throw new Error(
+      //console.log(vs);
+      if (!vs.map((v) => v[0]).includes(true)) {
+        /*throw new Error(
+          `cannnot put ${this.color[(i % 2) + 1]} on (${this.history[i][0]},${
+            this.history[i][1]
+          })`
+        );*/
+        alert(
           `cannnot put ${this.color[(i % 2) + 1]} on (${this.history[i][0]},${
             this.history[i][1]
           })`
         );
+        this.history.pop();
+        return this;
+      }
       for (let k = 0; k < vs.length; k++) {
         let co = coo[k];
         for (let l = 0; l <= vs[k][1]; l++) {
@@ -201,6 +213,19 @@ class Othello {
         this.ctx.fillRect(0, 0, this.size, this.size);
         this.drow();
       }
+      console.log(
+        this.board
+          .map((value, i) =>
+            value
+              .map((_, j) =>
+                [...this.canPutAt(i, j, 1), ...this.canPutAt(i, j, 2)].map(
+                  (v) => v[0]
+                )
+              )
+              .reduce((a, b) => [...a, ...b])
+          )
+          .reduce((a, b) => [...a, ...b])
+      );
       if (
         !this.board
           .map((value, i) =>
@@ -240,14 +265,70 @@ class Othello {
 }
 
 let othello = new Othello(canvas).drow().enableClickToPut();
-/*othello.history = [
+
+othello.history = [
   [4, 2],
   [5, 2],
   [3, 5],
-];*/
+  [2, 5],
+  [2, 4],
+  [4, 5],
+  [5, 3],
+  [2, 3],
+  [3, 6],
+  [4, 6],
+  [5, 4],
+  [4, 1],
+  [5, 5],
+  [6, 5],
+  [6, 4],
+  [7, 4],
+  [5, 6],
+  [6, 6],
+  [7, 7],
+  [6, 3],
+  [6, 2],
+  [7, 5],
+  [5, 1],
+  [6, 1],
+  [1, 4],
+  [4, 7],
+  [7, 0],
+  [3, 2],
+  [5, 0],
+  [4, 0],
+  [6, 0],
+  [7, 1],
+  [7, 2],
+  [3, 7],
+  [3, 1],
+  [7, 3],
+  [3, 0],
+  [7, 6],
+  [6, 7],
+  [5, 7],
+  [2, 7],
+  [2, 6],
+  [1, 7],
+  [1, 6],
+  [1, 5],
+  [2, 1],
+  [2, 0],
+  [2, 2],
+  [1, 2],
+  [1, 3],
+  [0, 3],
+  [0, 4],
+  [0, 5],
+  [0, 6],
+  [0, 7],
+  [1, 1],
+  [0, 2],
+  [1, 0],
+  [0, 1],
+  [0, 0],
+];
 othello.readHistry();
-console.log(
-  othello.winner.then((d) => {
-    console.log(d);
-  })
-);
+othello.winner.then((d) => {
+  console.log(d);
+});
