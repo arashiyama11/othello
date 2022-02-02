@@ -213,27 +213,24 @@ class Othello {
         this.ctx.fillRect(0, 0, this.size, this.size);
         this.drow();
       }
-      console.log(
-        this.board
-          .map((value, i) =>
-            value
-              .map((_, j) =>
-                [...this.canPutAt(i, j, 1), ...this.canPutAt(i, j, 2)].map(
-                  (v) => v[0]
-                )
+      //console.log
+      this.board
+        .map((value, i) =>
+          value
+            .map((_, j) =>
+              [...this.canPutAt(i, j, 1), ...this.canPutAt(i, j, 2)].map(
+                (v) => v[0]
               )
-              .reduce((a, b) => [...a, ...b])
-          )
-          .reduce((a, b) => [...a, ...b])
-      );
+            )
+            .reduce((a, b) => [...a, ...b])
+        )
+        .reduce((a, b) => [...a, ...b]);
       if (
         !this.board
           .map((value, i) =>
             value
               .map((_, j) =>
-                [...this.canPutAt(i, j, 1), ...this.canPutAt(i, j, 2)].map(
-                  (v) => v[0]
-                )
+                this.canPutAt(i, j, this.history.length).map((v) => v[0])
               )
               .reduce((a, b) => [...a, ...b])
           )
@@ -266,7 +263,8 @@ class Othello {
 
 let othello = new Othello(canvas).drow().enableClickToPut();
 
-othello.history = [
+//othello.history =
+[
   [4, 2],
   [5, 2],
   [3, 5],
@@ -330,5 +328,5 @@ othello.history = [
 ];
 othello.readHistry();
 othello.winner.then((d) => {
-  console.log(d);
+  console.log(`${d} win`);
 });
