@@ -8,8 +8,8 @@ class Othello {
   constructor(canvasElement) {
     this.canvas = canvasElement;
     this.ctx = canvasElement.getContext('2d');
-    this.size = canvasElement.height;
-    this.pixcel = this.canvas.height / 8;
+    this.size = Math.min(canvasElement.height, canvasElement.width);
+    this.pixcel = this.size / 8;
     this.backgroundColor = 'green';
     this.board = [
       [0, 0, 0, 0, 0, 0, 0, 0],
@@ -69,6 +69,7 @@ class Othello {
   }
   disableClickToPut() {
     this.canvas.removeEventListener('click', this.clickEvent);
+    return this;
   }
   at(x, y) {
     if (this.board[y] === undefined) return undefined;
@@ -112,7 +113,6 @@ class Othello {
     }
     return this;
   }
-
   canPutAt(x, y, color) {
     //上から時計回り
     if (this.at(x, y) !== 0)
@@ -243,7 +243,6 @@ class Othello {
     }
     return this;
   }
-
   drowGrid() {
     this.ctx.fillStyle = this.backgroundColor;
     this.ctx.fillRect(0, 0, this.size, this.size);
@@ -251,21 +250,19 @@ class Othello {
     this.ctx.strokeStyle = 'black';
     for (let i = 0; i < 8; i++) {
       this.ctx.moveTo(i * this.pixcel, 0);
-      this.ctx.lineTo(i * this.pixcel, size);
+      this.ctx.lineTo(i * this.pixcel, this.size);
     }
     for (let i = 0; i < 8; i++) {
       this.ctx.moveTo(0, i * this.pixcel);
-      this.ctx.lineTo(size, i * this.pixcel);
+      this.ctx.lineTo(this.size, i * this.pixcel);
     }
     this.ctx.stroke();
     this, ctx.closePath();
     return this;
   }
 }
-
 let othello = new Othello(canvas).drow().enableClickToPut();
-
-//othello.history =
+/*othello.history =
 [
   [4, 2],
   [5, 2],
@@ -327,7 +324,7 @@ let othello = new Othello(canvas).drow().enableClickToPut();
   [1, 0],
   [0, 1],
   [0, 0],
-];
+];*/
 othello.readHistry();
 othello.winner.then((d) => {
   console.log(`${d} win`);
