@@ -40,7 +40,7 @@ class Othello {
         if (this.win == 'decide') {
           let white = 0;
           let black = 0;
-          let result = this.board
+          this.board
             .reduce((a, b) => [...a, ...b])
             .forEach((v) => {
               if (v === 1) {
@@ -230,7 +230,9 @@ class Othello {
           .map((value, i) =>
             value
               .map((_, j) =>
-                this.canPutAt(i, j, this.history.length).map((v) => v[0])
+                this.canPutAt(i, j, (this.history.length % 2) + 1).map(
+                  (v) => v[0]
+                )
               )
               .reduce((a, b) => [...a, ...b])
           )
