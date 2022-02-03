@@ -329,3 +329,11 @@ othello.winner.then((d) => {
   console.log(`${d} win`);
   document.querySelector('input').value = `${d} win`;
 });
+
+document.getElementById('back').addEventListener('click', () => {
+  if (othello.history.length > 0) {
+    othello.history.pop();
+    othello.readHistry();
+    othello.drow();
+  }
+});
