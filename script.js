@@ -5,7 +5,12 @@ let ctx = canvas.getContext('2d');
 canvas.height = size;
 canvas.width = size;
 class Othello {
-  constructor(canvasElement) {
+  constructor() {
+    this.order = 1;
+    this.color = [null, 'black', 'white'];
+    this.history = [];
+  }
+  writeOn(canvasElement) {
     this.canvas = canvasElement;
     this.ctx = canvasElement.getContext('2d');
     this.size = Math.min(canvasElement.height, canvasElement.width);
@@ -21,9 +26,6 @@ class Othello {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0],
     ];
-    this.order = 1;
-    this.color = [null, 'black', 'white'];
-    this.history = [];
     this.clickEvent = (e) => {
       this.mouseX = Math.floor(e.offsetX / this.pixcel);
       this.mouseY = Math.floor(e.offsetY / this.pixcel);
@@ -33,6 +35,7 @@ class Othello {
         this.readHistry();
       }
     };
+    return this;
   }
   get winner() {
     return new Promise((resolve, reject) => {
@@ -64,10 +67,12 @@ class Othello {
     });
   }
   enableClickToPut() {
+    if (!this.canvas) return this;
     this.canvas.addEventListener('click', this.clickEvent);
     return this;
   }
   disableClickToPut() {
+    if (!this.canvas) return this;
     this.canvas.removeEventListener('click', this.clickEvent);
     return this;
   }
@@ -83,6 +88,7 @@ class Othello {
     }
   }
   drow() {
+    if (!this.canvas) return this;
     this.drowGrid();
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
@@ -212,7 +218,6 @@ class Othello {
         this.ctx.fillRect(0, 0, this.size, this.size);
         this.drow();
       }
-      //console.log
       this.board
         .map((value, i) =>
           value
@@ -243,6 +248,7 @@ class Othello {
     return this;
   }
   drowGrid() {
+    if (!this.canvas) return this;
     this.ctx.fillStyle = this.backgroundColor;
     this.ctx.fillRect(0, 0, this.size, this.size);
     this.ctx.beginPath();
@@ -260,7 +266,7 @@ class Othello {
     return this;
   }
 }
-let othello = new Othello(canvas).drow().enableClickToPut();
+let othello = new Othello().writeOn(canvas).drow().enableClickToPut();
 /*othello.history =
 [
   [4, 2],
