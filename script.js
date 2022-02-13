@@ -262,7 +262,7 @@ class Othello {
       this.ctx.lineTo(this.size, i * this.pixcel);
     }
     this.ctx.stroke();
-    this, ctx.closePath();
+    this.ctx.closePath();
     return this;
   }
 }
