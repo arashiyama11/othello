@@ -1,3 +1,2 @@
-# web-platform-p1xfv8
-
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/web-platform-p1xfv8)
+# this page is pablished at here
+https://jinjanow.github.io/othello/
