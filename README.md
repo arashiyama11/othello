@@ -1,2 +1,2 @@
 # this page is pablished at here
-https://jinjanow.github.io/othello/
+https://arashi-yama.github.io/othello/
