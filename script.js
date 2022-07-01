@@ -7,14 +7,14 @@ canvas.width = size;
 
 const othello = new Othello().writeOn(canvas).drow().enableClickToPut();
 
-othello.readHistry();
+othello.readHistory();
 othello.winner.then((win) => {
   winner.value = win;
 });
 document.getElementById('back').addEventListener('click', () => {
   if (othello.history.length > 0) {
     othello.history.pop();
-    othello.readHistry();
+    othello.readHistory();
     othello.drow();
   }
 });

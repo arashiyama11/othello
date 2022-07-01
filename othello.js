@@ -25,7 +25,7 @@ export class Othello {
       this.mouseY = Math.floor(e.offsetY / this.pixcel);
       if (0 <= this.mouseX <= 8 && 0 <= this.mouseY <= 8) {
         this.putOn(this.mouseX, this.mouseY);
-        this.readHistry();
+        this.readHistory();
       }
       console.log(
         '[' + this.history.map((v) => `[${v.join(',')}]`).join(',') + ']'
@@ -163,7 +163,7 @@ export class Othello {
     this.history.push([x, y]);
     return this;
   }
-  readHistry() {
+  readHistory() {
     //historyから最新の盤面を計算する
     this.board = [
       [0, 0, 0, 0, 0, 0, 0, 0],
