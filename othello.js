@@ -27,9 +27,6 @@ export class Othello {
         this.putOn(this.mouseX, this.mouseY);
         this.readHistory();
       }
-      console.log(
-        '[' + this.history.map((v) => `[${v.join(',')}]`).join(',') + ']'
-      );
     };
     return this;
   }
