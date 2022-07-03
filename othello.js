@@ -80,9 +80,9 @@ export class Othello {
       }
     }
   }
-  drow() {
+  drow(fillBackGround = true) {
     if (!this.canvas) return this;
-    this.drowGrid();
+    this.drowGrid(fillBackGround);
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         if (this.board[i][j] === 1) {
@@ -234,10 +234,10 @@ export class Othello {
     return result;
   }
 
-  drowGrid() {
+  drowGrid(fillBackGround = true) {
     if (!this.canvas) return this;
     this.ctx.fillStyle = this.backgroundColor;
-    this.ctx.fillRect(0, 0, this.size, this.size);
+    if (fillBackGround) this.ctx.fillRect(0, 0, this.size, this.size);
     this.ctx.beginPath();
     this.ctx.strokeStyle = 'black';
     for (let i = 0; i < 8; i++) {
@@ -251,5 +251,24 @@ export class Othello {
     this.ctx.stroke();
     this.ctx.closePath();
     return this;
+  }
+
+  hightlightCell(x, y, color = 'yellow') {
+    if (!this.canvas) return this;
+    this.ctx.fillStyle = color;
+
+    this.ctx.fillRect(
+      x * this.pixcel + 1,
+      y * this.pixcel + 1,
+      this.pixcel - 2,
+      this.pixcel - 2
+    );
+    this.ctx.strokeRect(
+      x * this.pixcel,
+      y * this.pixcel,
+      this.pixcel,
+      this.pixcel
+    );
+    this.drow(false);
   }
 }

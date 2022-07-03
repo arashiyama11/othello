@@ -6,7 +6,12 @@ canvas.height = size;
 canvas.width = size;
 
 const othello = new Othello().writeOn(canvas).drow().enableClickToPut();
-
+console.log(
+  othello.getPutablePlace(1).forEach(([x, y]) => {
+    console.log(x, y);
+    othello.hightlightCell(x, y);
+  })
+);
 othello.readHistory();
 othello.winner.then((win) => {
   winner.value = win;
